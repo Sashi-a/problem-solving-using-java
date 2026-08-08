@@ -1,0 +1,301 @@
+1.SHUFFLE ARRAY:
+class Solution {
+    public int[] shuffle(int[] nums, int n) {
+        int[] result = new int[2 * n];
+        for (int i = 0; i < n; i++) {
+            result[2 * i] = nums[i];
+            result[2 * i + 1] = nums[i + n];
+        }
+        return result;
+    }
+}
+
+OUTPUT:
+Input
+nums =
+[2,5,1,3,4,7]
+n =
+3
+Output
+[2,3,5,4,1,7]
+Expected
+[2,3,5,4,1,7]
+
+2.REMOVE ELEMENT:
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int k = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        return k;
+    }
+}
+
+OUTPUT:
+Input
+nums =
+[3,2,2,3]
+val =
+3
+Output
+[2,2]
+Expected
+[2,2]
+
+3.REMOVE DUPLICATES FROM SORTED ARRAY:
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) return 0;
+        
+        int k = 1; // Position for the next unique element
+        
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        
+        return k;
+    }
+}
+
+OUTPUT:
+Input
+nums =
+[1,1,2]
+Output
+[1,2]
+Expected
+[1,2]
+
+  4.MAXIMUM SUBARRAY:
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSoFar = nums[0];
+        int currentMax = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            // Decide whether to add current element to existing subarray 
+            // or start a new subarray from the current element.
+            currentMax = Math.max(nums[i], currentMax + nums[i]);
+            maxSoFar = Math.max(maxSoFar, currentMax);
+        }
+
+        return maxSoFar;
+    }
+}
+
+OUTPUT:
+Input
+nums =
+[-2,1,-3,4,-1,2,1,-5,4]
+Output
+6
+Expected
+6
+
+  5.FIND THE HIGHEST ALTITUDE:
+class Solution {
+    public int largestAltitude(int[] gain) {
+        int maxAltitude = 0;
+        int currentAltitude = 0;
+        
+        for (int g : gain) {
+            currentAltitude += g;
+            maxAltitude = Math.max(maxAltitude, currentAltitude);
+        }
+        
+        return maxAltitude;
+    }
+}
+
+OUTPUT:
+Input
+gain =
+[-5,1,5,0,-7]
+Output
+1
+Expected
+1
+
+  6.GROUP ANAGRAMS:
+import java.util.*;
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+
+        for (String s : strs) {
+            char[] chars = s.toCharArray();
+            Arrays.sort(chars);
+            String sorted = new String(chars);
+
+            map.putIfAbsent(sorted, new ArrayList<>());
+            map.get(sorted).add(s);
+        }
+
+        return new ArrayList<>(map.values());
+    }
+}
+
+OUTPUT:
+Input
+strs =
+["eat","tea","tan","ate","nat","bat"]
+Output
+[["eat","tea","ate"],["bat"],["tan","nat"]]
+Expected
+[["bat"],["nat","tan"],["ate","eat","tea"]]
+
+  7.TOP K FREQUENT ELEMENTS:
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int num : nums) {
+            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        }
+
+        // Index = frequency, Value = list of numbers with that frequency
+        List<Integer>[] buckets = new List[nums.length + 1];
+        for (int key : countMap.keySet()) {
+            int freq = countMap.get(key);
+            if (buckets[freq] == null) {
+                buckets[freq] = new ArrayList<>();
+            }
+            buckets[freq].add(key);
+        }
+
+        int[] result = new int[k];
+        int index = 0;
+
+        for (int i = buckets.length - 1; i >= 0 && index < k; i--) {
+            if (buckets[i] != null) {
+                for (int num : buckets[i]) {
+                    result[index++] = num;
+                    if (index == k) break;
+                }
+            }
+        }
+
+        return result;
+    }
+}
+
+OUTPUT:
+Input
+nums =
+[1,1,1,2,2,3]
+k =
+2
+Output
+[1,2]
+Expected
+[1,2]
+
+  8.JAVA DEQUEUE:
+import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        Deque<Integer> deque = new ArrayDeque<>();
+        Map<Integer, Integer> map = new HashMap<>();
+
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int maxUnique = 0;
+
+        for (int i = 0; i < n; i++) {
+            int num = in.nextInt();
+
+            // Add element to deque and update frequency count
+            deque.addLast(num);
+            map.put(num, map.getOrDefault(num, 0) + 1);
+
+            // Once the window reaches size m
+            if (deque.size() == m) {
+                maxUnique = Math.max(maxUnique, map.size());
+
+                // Early exit optimization: maximum possible unique numbers is m
+                if (maxUnique == m) {
+                    break;
+                }
+
+                // Slide window forward: remove first element
+                int removed = deque.removeFirst();
+                int count = map.get(removed);
+                if (count == 1) {
+                    map.remove(removed);
+                } else {
+                    map.put(removed, count - 1);
+                }
+            }
+        }
+
+        System.out.println(maxUnique);
+    }
+}
+
+OUTPUT:
+Input (stdin)
+6 3
+5 3 5 2 3 2
+Your Output (stdout)
+3
+Expected Output
+3
+
+  9.JAVA HASHSET:
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+ public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int t = s.nextInt();
+        String [] pair_left = new String[t];
+        String [] pair_right = new String[t];
+        
+        for (int i = 0; i < t; i++) {
+            pair_left[i] = s.next();
+            pair_right[i] = s.next();
+        }
+HashSet<String> set = new HashSet<String>();
+
+for (int i = 0; i < t; i++) {
+    set.add(pair_left[i] + " " + pair_right[i]);
+    System.out.println(set.size());
+}
+
+   OUTPUT:
+   Input (stdin)
+5
+john tom
+john mary
+john tom
+mary anna
+mary anna
+Your Output (stdout)
+1
+2
+2
+3
+3
+Expected Output
+1
+2
+2
+3
+3
+
+  
+
